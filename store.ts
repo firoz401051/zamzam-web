@@ -128,7 +128,7 @@ const useCartStore = create<StoreState>()(
     (set, get) => ({
       items: [],
       favoriteProduct: [],
-      selectedCurrency: currencies[1], // Default to INR
+      selectedCurrency: currencies.find((currency) => currency.code === "INR")!,
       currencies: currencies,
       lastRateUpdate: null,
       isUpdatingRates: false,
