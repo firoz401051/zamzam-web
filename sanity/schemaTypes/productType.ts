@@ -162,21 +162,24 @@ export const productType = defineType({
     }),
 
     // Product Organization
-    defineField({
-      name: "categories",
-      title: "Categories",
-      type: "array",
-      of: [{ type: "reference", to: { type: "category" } }],
-      validation: (Rule) => Rule.min(1),
-    }),
-    defineField({
-      name: "brand",
-      title: "Brand",
-      type: "reference",
-      to: { type: "brand" },
-    }),
+   defineField({
+  name: "categories",
+  title: "Categories",
+  type: "array",
+  group: "organization",
+  of: [{ type: "reference", to: { type: "category" } }],
+  validation: (Rule) => Rule.min(1),
+}),
+   defineField({
+  name: "brand",
+  title: "Brand",
+  type: "reference",
+  group: "organization",
+  to: { type: "brand" },
+}),
     defineField({
       name: "tags",
+      group: "organization",
       title: "Tags",
       type: "array",
       of: [{ type: "string" }],
