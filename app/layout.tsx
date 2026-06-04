@@ -17,10 +17,37 @@ const poppins = Poppins({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s - Zam Zam Fashion store",
-    default: "Zam Zam Fashion store",
+    template: "%s | Zam Zam Fashion Store",
+    default: "Zam Zam Fashion Store",
   },
-  description: "Zam Zam Fashion store, Your one stop shop for all your needs",
+
+  description:
+    "Shop premium sarees, shervani, dress Materials, lehenga, lancha ,kids wear, footwear, purses, bags, accessories, tamil fashion, burkhas, abayas and fashion collections at Zam Zam Fashion Store.",
+
+  keywords: [
+    "sarees",
+    "burkha",
+    "abaya",
+    "fashion store",
+    "shervani",
+    "dress Materials",
+    "lehenga",
+    "lancha",
+    "kids wear",
+    "footwear",
+    "purses",
+    "bags",
+    "accessories",
+    "tamil fashion",
+    "designer sarees",
+    "women fashion",
+    "zam zam fashion store",
+  ],
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 const RootLayout = async ({ children }: { children: React.React.ReactNode }) => {
