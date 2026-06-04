@@ -444,10 +444,10 @@ export const productType = defineType({
         segments && segments.length > 0 ? ` • ${segments[0]}` : "";
 
       return {
-        title: title,
-        subtitle: `$${price} ${stockStatus}${segmentBadge}`,
-        media: image,
-      };
+              title,
+              subtitle: `₹${Number(price).toLocaleString("en-IN")} ${stockStatus}${segmentBadge}`,
+              media: image,
+            };
     },
   },
   orderings: [
