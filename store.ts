@@ -238,14 +238,13 @@ const useCartStore = create<StoreState>()(
         // Trigger immediate re-render for all components using currency
       },
 
-      convertPrice: (priceInUSD: number): number => {
-        const { selectedCurrency } = get();
-        return priceInUSD * selectedCurrency.rate;
-      },
+      convertPrice: (price: number): number => {
+  return price;
+},
 
-      formatPrice: (priceInUSD: number): string => {
+      formatPrice: (price: number): string => { {
         const { selectedCurrency, convertPrice } = get();
-        const convertedPrice = convertPrice(priceInUSD);
+        const convertedPrice = price;
 
         // Special formatting for different currencies
         switch (selectedCurrency.code) {
