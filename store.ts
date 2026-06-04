@@ -242,8 +242,8 @@ const useCartStore = create<StoreState>()(
   return price;
 },
 
-      formatPrice: (price: number): string => { {
-        const { selectedCurrency, convertPrice } = get();
+      formatPrice: (price: number): string => {
+        const { selectedCurrency } = get();
         const convertedPrice = price;
 
         // Special formatting for different currencies
