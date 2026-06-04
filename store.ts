@@ -110,8 +110,8 @@ interface StoreState {
   selectedCurrency: Currency;
   currencies: Currency[];
   setCurrency: (currency: Currency) => void;
-  convertPrice: (priceInUSD: number) => number;
-  formatPrice: (priceInUSD: number) => string;
+  convertPrice: (price: number) => number;
+  formatPrice: (price: number) => string;
   getCurrencyByCode: (code: string) => Currency | undefined;
   updateExchangeRates: () => Promise<void>;
   lastRateUpdate: string | null;
