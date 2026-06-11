@@ -1,10 +1,6 @@
 import {
   X,
-  Home,
-  ShoppingBag,
-  Heart,
   User,
-  Search,
   Settings,
   HelpCircle,
   LogOut,
@@ -29,13 +25,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
   const sidebarRef = useOutsideClick<HTMLDivElement>(onClose);
   const { signOut } = useAuth();
-
-  const quickActions = [
-    { icon: Home, label: "Home", href: "/" },
-    { icon: ShoppingBag, label: "Shop", href: "/products" },
-    { icon: Heart, label: "Wishlist", href: "/wishlist" },
-    { icon: Search, label: "Search", href: "/search" },
-  ];
 
   const supportItems = [
     { icon: HelpCircle, label: "Help & Support", href: "/help" },
@@ -111,35 +100,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </SignedOut>
             </div>
 
-            {/* Quick Actions */}
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider">
-                Quick Access
-              </h3>
-              <div className="grid grid-cols-2 gap-3">
-                {quickActions.map((action, index) => (
-                  <Link
-                    key={action.label}
-                    href={action.href}
-                    onClick={onClose}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg border border-zamzam-primary/50 hover:bg-zamzam-primary/20 transition-all duration-200 group"
-                  >
-                    <action.icon
-                      size={24}
-                      className="text-zamzam-primary group-hover:scale-110 transition-transform duration-200"
-                    />
-                    <span className="text-xs font-medium text-gray-700 group-hover:text-zamzam-primary transition-colors duration-200">
-                      {action.label}
-                    </span>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
             {/* Navigation Menu */}
             <div className="flex-1 p-6 overflow-y-auto">
               <h3 className="font-bold text-gray-800 mb-4 text-sm uppercase tracking-wider">
-                Navigation
+                Menu
               </h3>
               <div className="space-y-1">
                 {headerData?.map((item, index) => (
