@@ -54,8 +54,8 @@ import PriceFormatter from "@/components/PriceFormatter";
 interface User {
   id: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   imageUrl?: string;
   createdAt: string;
   lastSignIn?: string;
@@ -554,12 +554,12 @@ export default function UsersManagementClient({
                       <TableCell>
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                            {user.firstName.charAt(0)}
-                            {user.lastName.charAt(0)}
+                            {user.firstName?.charAt(0) || "U"}
+                            {user.lastName?.charAt(0) || ""}
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
-                              {user.firstName} {user.lastName}
+                              {user.firstName || "Unknown"} {user.lastName || ""}
                             </p>
                             <p className="text-sm text-gray-500">
                               {user.email}
@@ -708,12 +708,12 @@ export default function UsersManagementClient({
               {/* User Avatar and Basic Info */}
               <div className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
                 <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-medium">
-                  {selectedUser.firstName.charAt(0)}
-                  {selectedUser.lastName.charAt(0)}
+                  {selectedUser.firstName?.charAt(0) || "U"}
+                  {selectedUser.lastName?.charAt(0) || ""}
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">
-                    {selectedUser.firstName} {selectedUser.lastName}
+                    {selectedUser.firstName || "Unknown"} {selectedUser.lastName || ""}
                   </p>
                   <p className="text-sm text-gray-500">{selectedUser.email}</p>
                   <Badge
@@ -864,12 +864,12 @@ export default function UsersManagementClient({
               <div className="py-4">
                 <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg border border-red-100">
                   <div className="w-10 h-10 bg-linear-to-br from-red-500 to-pink-600 rounded-full flex items-center justify-center text-white font-medium shadow-md">
-                    {userToDelete.firstName.charAt(0)}
-                    {userToDelete.lastName.charAt(0)}
+                    {userToDelete.firstName?.charAt(0) || "U"}
+                    {userToDelete.lastName?.charAt(0) || ""}
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">
-                      {userToDelete.firstName} {userToDelete.lastName}
+                      {userToDelete.firstName || "Unknown"} {userToDelete.lastName || ""}
                     </p>
                     <p className="text-sm text-gray-500">
                       {userToDelete.email}
