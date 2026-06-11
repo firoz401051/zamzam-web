@@ -62,7 +62,7 @@ const HomeBanner = () => {
                   className="bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-2.5 sm:px-10 sm:py-6 rounded-full font-bold text-base sm:text-lg shadow-lg hover:shadow-purple-500/30 transform hover:-translate-y-1 transition-all duration-300"
                 >
                   <Link
-                    href="/products"
+                    href="/products?category=womens-fashion"
                     className="flex items-center justify-center gap-2"
                   >
                     SHOP NOW
@@ -148,7 +148,7 @@ const HomeBanner = () => {
                   className="bg-white hover:bg-emerald-50 text-emerald-600 hover:text-emerald-700 border-0 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300 mt-2 font-bold"
                 >
                   <Link
-                    href="/category/men"
+                    href="/products?category=mens-fashion"
                     className="flex items-center gap-1"
                   >
                     Shop Now
@@ -195,7 +195,7 @@ const HomeBanner = () => {
                 Kids World
               </h4>
               <Link
-                href="/category/kids"
+                href="/products?category=kids-wear"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 group-hover:text-orange-600 transition-colors"
               >
                 Explore Now 
@@ -233,7 +233,7 @@ const HomeBanner = () => {
                 Accessories
               </h4>
               <Link
-                href="/category/accessories"
+                href="/products?category=fancy-item"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 group-hover:text-purple-600 transition-colors"
               >
                 Shop Now
@@ -275,7 +275,7 @@ const HomeBanner = () => {
                 Footwear
               </h4>
                <Link
-                href="/category/shoes"
+                href="/products?category=footwear"
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-gray-700 group-hover:text-gray-900 transition-colors"
               >
                 Discover
