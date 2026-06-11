@@ -25,7 +25,10 @@ import {
   OrderSummarySkeleton,
   AddressSelectionSkeleton,
 } from "@/components/cart/CartSkeletons";
-import { calculateProductPrice } from "@/lib/pricing-utils";
+import {
+  calculateProductPrice,
+  getFinalPrice,
+} from "@/lib/pricing-utils";
 import OrderCreationLoader from "@/components/OrderCreationLoader";
 
 const CartPage = () => {
@@ -80,13 +83,15 @@ const CartPage = () => {
 
     // ✅ Freeze cart items BEFORE loading starts
     const frozenCartItems = groupedItems.map(({ product }) => ({
-      product: {
-        _id: product._id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        images: product.images,
-      },
+    product: {
+  _id: product._id,
+  name: product.name,
+  description: product.description,
+  price: product.price,
+  salePrice: product.salePrice,
+  discount: product.discount,
+  images: product.images,
+},
       quantity: getItemCount(product._id),
     }));
 
@@ -102,10 +107,11 @@ const CartPage = () => {
       const toastId = toast.loading("Creating your order...");
 
       // ✅ Calculate totals
-      const subtotal = frozenCartItems.reduce(
-        (sum, item) => sum + item.product.price * item.quantity,
-        0
-      );
+    const subtotal = frozenCartItems.reduce(
+  (sum, item) =>
+    sum + getFinalPrice(item.product) * item.quantity,
+  0
+);
 
       const taxAmount = 0;
       const shippingCost = 0;

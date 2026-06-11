@@ -142,16 +142,20 @@ const ProductsPageClient = ({
       }
 
       if (price) {
-        const [min, max] = price.split("-").map(Number);
-        if (max) {
-          query += ` && price >= $minPrice && price <= $maxPrice`;
-          params.minPrice = min;
-          params.maxPrice = max;
-        } else {
-          query += ` && price >= $minPrice`;
-          params.minPrice = min;
-        }
-      }
+  const [min, max] = price.split("-").map(Number);
+
+  if (max) {
+    query += ` && coalesce(salePrice, price) >= $minPrice
+               && coalesce(salePrice, price) <= $maxPrice`;
+
+    params.minPrice = min;
+    params.maxPrice = max;
+  } else {
+    query += ` && coalesce(salePrice, price) >= $minPrice`;
+
+    params.minPrice = min;
+  }
+}
 
       query += `]{
         ...,
@@ -163,8 +167,8 @@ const ProductsPageClient = ({
       let sortClause = "";
       switch (sort) {
         case "price-low":
-          sortClause = " | order(price asc)";
-          break;
+  sortClause = " | order(coalesce(salePrice, price) asc)";
+  break;
         case "price-high":
           sortClause = " | order(price desc)";
           break;
@@ -218,11 +222,12 @@ const ProductsPageClient = ({
         if (price) {
           const [min, max] = price.split("-").map(Number);
           if (max) {
-            countQuery += ` && price >= $minPrice && price <= $maxPrice`;
+            countQuery += ` && coalesce(salePrice, price) >= $minPrice
+                && coalesce(salePrice, price) <= $maxPrice`;
             params.minPrice = min;
             params.maxPrice = max;
           } else {
-            countQuery += ` && price >= $minPrice`;
+            countQuery += ` && coalesce(salePrice, price) >= $minPrice`;
             params.minPrice = min;
           }
         }

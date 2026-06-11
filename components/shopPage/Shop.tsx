@@ -70,7 +70,8 @@ const Shop = ({ categories, brands }: Props) => {
       *[_type == 'product' 
         && (!defined($selectedCategory) || references(*[_type == "category" && slug.current == $selectedCategory]._id))
         && (!defined($selectedBrand) || references(*[_type == "brand" && slug.current == $selectedBrand]._id))
-        && price >= $minPrice && price <= $maxPrice
+        && coalesce(salePrice, price) >= $minPrice
+        && coalesce(salePrice, price) <= $maxPrice
       ] 
       | order(name asc) {
         ...,"categories": categories[]->title
