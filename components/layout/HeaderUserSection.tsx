@@ -53,22 +53,22 @@ const HeaderUserSection = ({ ordersCount }: Props) => {
         </SignedIn>
 
         <SignedOut>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/sign-in"
-              className="text-sm font-semibold hover:text-zamzam-text-dark"
-            >
-              Login
-            </Link>
+  <div className="hidden md:flex items-center gap-3">
+    <Link
+      href="/sign-in"
+      className="text-sm font-semibold hover:text-zamzam-text-dark"
+    >
+      Login
+    </Link>
 
-            <Link
-              href="/sign-up"
-              className="text-sm font-semibold bg-zamzam-primary-dark text-white px-4 py-2 rounded-md hover:bg-zamzam-primary-hover"
-            >
-              Sign Up
-            </Link>
-          </div>
-        </SignedOut>
+    <Link
+      href="/sign-up"
+      className="text-sm font-semibold bg-zamzam-primary-dark text-white px-4 py-2 rounded-md hover:bg-zamzam-primary-hover"
+    >
+      Sign Up
+    </Link>
+  </div>
+</SignedOut>
       </ClerkLoaded>
     </div>
   );
