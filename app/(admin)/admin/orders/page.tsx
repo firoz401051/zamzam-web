@@ -374,7 +374,13 @@ const AdminOrdersPage = () => {
                   <div>
                     <p className="text-sm text-gray-600">Pending</p>
                     <p className="text-2xl font-bold">
-                      {orders.filter((o) => o.status === "pending").length}
+                      {
+  orders.filter(
+    (o) =>
+      o.paymentStatus === "paid" &&
+      ["confirmed", "processing"].includes(o.status)
+  ).length
+}
                     </p>
                   </div>
                   <Calendar className="h-8 w-8 text-yellow-500" />
