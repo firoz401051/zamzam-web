@@ -1,21 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { currentUser } from '@clerk/nextjs/server';
 import { client } from '@/sanity/lib/client';
-import { getUserByClerkId } from '@/lib/employee-utils';
 
 // GET /api/admin/products/stats - Get product statistics
 export async function GET() {
   try {
-    const { userId } = await auth();
-    
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const clerkUser = await currentUser();
 
-    const user = await getUserByClerkId(userId);
-    if (!user || user.employeeRole !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+if (!clerkUser) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+const userEmail =
+  clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase();
+
+const adminEmails = (
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL || ""
+)
+  .split(",")
+  .map((email) => email.trim().toLowerCase());
+
+if (!userEmail || !adminEmails.includes(userEmail)) {
+  return NextResponse.json(
+    { error: "Admin access required" },
+    { status: 403 }
+  );
+}
 
     const queries = {
       totalProducts: `count(*[_type == "product"])`,
@@ -25,14 +38,13 @@ export async function GET() {
       lowStockProducts: `count(*[_type == "product" && stock <= 5])`,
       outOfStockProducts: `count(*[_type == "product" && stock == 0])`,
       featuredProducts: `count(*[_type == "product" && featured == true])`,
-      totalValue: `sum(*[_type == "product" && status == "active"].(price * stock))`,
-      averagePrice: `avg(*[_type == "product" && status == "active"].price)`,
-      categoryDistribution: `*[_type == "product" && status == "active"] {
-        "category": category->name
-      } | group(category) | {
-        "name": _key,
-        "count": count(_value)
-      }`,
+      totalValue: 0,
+     // categoryDistribution: `*[_type == "product" && status == "active"] {
+     //   "category": category->name
+     // } | group(category) | {
+     //   "name": _key,
+     //   "count": count(_value)
+    //  }`,
       recentProducts: `*[_type == "product"] | order(_createdAt desc) [0...5] {
         _id,
         name,
@@ -44,8 +56,14 @@ export async function GET() {
     };
 
     const results = await Promise.all(
-      Object.entries(queries).map(async ([key, query]) => [key, await client.fetch(query)])
-    );
+  Object.entries(queries).map(async ([key, query]) => {
+    if (typeof query === "string") {
+      return [key, await client.fetch(query)];
+    }
+
+    return [key, query];
+  })
+);
 
     const stats = Object.fromEntries(results);
 

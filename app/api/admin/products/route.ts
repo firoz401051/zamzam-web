@@ -1,21 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
+import { auth, currentUser } from '@clerk/nextjs/server';
 import { client, writeClient } from '@/sanity/lib/client';
 import { getUserByClerkId } from '@/lib/employee-utils';
 
 // GET /api/admin/products - List all products with filtering
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await auth();
-    
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  const clerkUser = await currentUser();
 
-    const user = await getUserByClerkId(userId);
-    if (!user || user.employeeRole !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+if (!clerkUser) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+const userEmail =
+  clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase();
+
+const adminEmails = (
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL || ""
+)
+  .split(",")
+  .map((email) => email.trim().toLowerCase());
+
+if (!userEmail || !adminEmails.includes(userEmail)) {
+  return NextResponse.json(
+    { error: "Admin access required" },
+    { status: 403 }
+  );
+}
 
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -67,13 +81,17 @@ export async function GET(request: NextRequest) {
     const products = await client.fetch(query);
 
     // Get total count for pagination
-    let countQuery = '*[_type == "product"';
-    if (filters.length > 0) {
-      countQuery += ` && (${filters.join(' && ')})`;
-    }
-    countQuery += '] | length';
+let countQuery = '*[_type == "product"';
 
-    const totalCount = await client.fetch(countQuery);
+if (filters.length > 0) {
+  countQuery += ` && (${filters.join(' && ')})`;
+}
+
+countQuery += ']';
+
+const totalCount = await client.fetch(
+  `count(${countQuery})`
+);
 
     return NextResponse.json({
       products,
@@ -96,16 +114,30 @@ export async function GET(request: NextRequest) {
 // POST /api/admin/products - Create new product
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-    
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+   const clerkUser = await currentUser();
 
-    const user = await getUserByClerkId(userId);
-    if (!user || user.employeeRole !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+if (!clerkUser) {
+  return NextResponse.json(
+    { error: "Unauthorized" },
+    { status: 401 }
+  );
+}
+
+const userEmail =
+  clerkUser.emailAddresses[0]?.emailAddress?.toLowerCase();
+
+const adminEmails = (
+  process.env.NEXT_PUBLIC_ADMIN_EMAIL || ""
+)
+  .split(",")
+  .map((email) => email.trim().toLowerCase());
+
+if (!userEmail || !adminEmails.includes(userEmail)) {
+  return NextResponse.json(
+    { error: "Admin access required" },
+    { status: 403 }
+  );
+}
 
     const productData = await request.json();
 
@@ -142,7 +174,7 @@ export async function POST(request: NextRequest) {
       stock: parseInt(productData.stock) || 0,
       status: productData.status || 'draft',
       featured: productData.featured || false,
-      createdBy: user._id,
+      createdBy: userEmail,
       _createdAt: new Date().toISOString()
     });
 

@@ -275,7 +275,9 @@ export default function AdminProductsClient() {
                   />
                   <div>
                     <h3 className="font-medium">{product.name}</h3>
-                    <p className="text-sm text-gray-500">{product.category.name}</p>
+                    <p className="text-sm text-gray-500">
+  {product.category?.name || "No Category"}
+</p>
                   </div>
                 </div>
                 
