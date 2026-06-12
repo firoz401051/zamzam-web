@@ -143,6 +143,18 @@ const AdminOrdersPage = () => {
     return matchesSearch && matchesFilter;
   });
 
+  const activeOrders = filteredOrders.filter((order) =>
+  ["confirmed", "processing", "shipped", "delivered"].includes(
+    order.status?.toLowerCase()
+  )
+);
+
+const exceptionOrders = filteredOrders.filter((order) =>
+  ["pending", "cancelled"].includes(
+    order.status?.toLowerCase()
+  )
+);
+
   // Handle local updates restricted to the sidebar editing state
   const handleLocalStatusChange = (newStatus: string) => {
     if (editedOrder) {
@@ -250,13 +262,33 @@ const AdminOrdersPage = () => {
     );
   };
 
-  const toggleSelectAll = () => {
-    if (selectedOrderIds.length === filteredOrders.length) {
-      setSelectedOrderIds([]);
-    } else {
-      setSelectedOrderIds(filteredOrders.map((order) => order._id));
-    }
-  };
+  const toggleSelectAllActive = () => {
+  const activeIds = activeOrders.map((order) => order._id);
+
+  if (activeIds.every((id) => selectedOrderIds.includes(id))) {
+    setSelectedOrderIds(
+      selectedOrderIds.filter((id) => !activeIds.includes(id))
+    );
+  } else {
+    setSelectedOrderIds([
+      ...new Set([...selectedOrderIds, ...activeIds]),
+    ]);
+  }
+};
+
+const toggleSelectAllException = () => {
+  const exceptionIds = exceptionOrders.map((order) => order._id);
+
+  if (exceptionIds.every((id) => selectedOrderIds.includes(id))) {
+    setSelectedOrderIds(
+      selectedOrderIds.filter((id) => !exceptionIds.includes(id))
+    );
+  } else {
+    setSelectedOrderIds([
+      ...new Set([...selectedOrderIds, ...exceptionIds]),
+    ]);
+  }
+};
 
   const handleBulkDelete = async () => {
     if (selectedOrderIds.length === 0) return;
@@ -508,7 +540,7 @@ const AdminOrdersPage = () => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Package className="h-5 w-5 mr-2" />
-                Orders ({filteredOrders.length})
+                Active Orders ({activeOrders.length})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -518,8 +550,8 @@ const AdminOrdersPage = () => {
                     <TableRow>
                       <TableHead className="w-[50px]">
                         <Checkbox 
-                          checked={filteredOrders.length > 0 && selectedOrderIds.length === filteredOrders.length}
-                          onCheckedChange={toggleSelectAll}
+                          checked={activeOrders.length > 0 && selectedOrderIds.length === activeOrders.length}
+                          onCheckedChange={toggleSelectAllActive}
                           aria-label="Select all"
                         />
                       </TableHead>
@@ -532,7 +564,7 @@ const AdminOrdersPage = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredOrders.map((order, index) => (
+                    {activeOrders.map((order, index) => (
                       <motion.tr
                         key={order._id}
                         initial={{ opacity: 0, y: 20 }}
@@ -603,6 +635,111 @@ const AdminOrdersPage = () => {
               </div>
             </CardContent>
           </Card>
+
+<Card>
+  <CardHeader>
+    <CardTitle className="flex items-center">
+      <Package className="h-5 w-5 mr-2" />
+      Exception Orders ({exceptionOrders.length})
+    </CardTitle>
+  </CardHeader>
+
+  <CardContent>
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Order</TableHead>
+            <TableHead>Customer</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Total</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {exceptionOrders.map((order, index) => (
+            <motion.tr
+              key={order._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="border-b"
+            >
+              <TableCell>
+                <div>
+                  <p className="font-medium">
+                    #{order.orderNumber}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {order.products?.length || 0} items
+                  </p>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div>
+                  <p className="font-medium">
+                    {order.customerName}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {order.email}
+                  </p>
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <div
+                  className={`px-2 py-1 rounded text-xs font-medium inline-block text-center min-w-[80px] ${getStatusColor(
+                    order.status
+                  )}`}
+                >
+                  {order.status.charAt(0).toUpperCase() +
+                    order.status.slice(1)}
+                </div>
+              </TableCell>
+
+              <TableCell>
+                <PriceFormatter amount={order.totalPrice} />
+              </TableCell>
+
+              <TableCell>
+                {new Date(order.orderDate).toLocaleDateString()}
+              </TableCell>
+
+              <TableCell>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedOrder(order);
+                      setEditedOrder(order);
+                      setIsOrderDetailOpen(true);
+                    }}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() =>
+                      handleDeleteOrderClick(order._id)
+                    }
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </TableCell>
+            </motion.tr>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  </CardContent>
+</Card>
 
           {/* Order Detail Sheet */}
           <Sheet open={isOrderDetailOpen} onOpenChange={setIsOrderDetailOpen}>
