@@ -352,7 +352,17 @@ const AdminOrdersPage = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">Total Orders</p>
-                    <p className="text-2xl font-bold">{orders.length}</p>
+                    <p className="text-2xl font-bold">
+  {
+    orders.filter(
+      (o) =>
+        o.paymentStatus === "paid" &&
+        ["confirmed", "processing", "shipped", "delivered"].includes(
+          o.status
+        )
+    ).length
+  }
+</p>
                   </div>
                   <Package className="h-8 w-8 text-blue-500" />
                 </div>
