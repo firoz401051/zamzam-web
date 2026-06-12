@@ -393,7 +393,13 @@ const AdminOrdersPage = () => {
                   <div>
                     <p className="text-sm text-gray-600">Completed</p>
                     <p className="text-2xl font-bold">
-                      {orders.filter((o) => o.status === "delivered").length}
+                      {
+  orders.filter(
+    (o) =>
+      o.paymentStatus === "paid" &&
+      ["shipped", "delivered"].includes(o.status)
+  ).length
+}
                     </p>
                   </div>
                   <Package className="h-8 w-8 text-green-500" />
@@ -407,10 +413,20 @@ const AdminOrdersPage = () => {
                     <p className="text-sm text-gray-600">Revenue</p>
                     <p className="text-2xl font-bold">
                       <PriceFormatter
-                        amount={orders.reduce(
-                          (sum, o) => sum + (o.totalPrice || 0),
-                          0
-                        )}
+                        amount={
+  orders
+    .filter(
+      (o) =>
+        o.paymentStatus === "paid" &&
+        ["confirmed", "processing", "shipped", "delivered"].includes(
+          o.status
+        )
+    )
+    .reduce(
+      (sum, o) => sum + (o.totalPrice || 0),
+      0
+    )
+}
                       />
                     </p>
                   </div>
