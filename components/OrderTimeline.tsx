@@ -57,11 +57,17 @@ const OrderTimeline = ({
   const getOrderTimeline = () => {
     const timeline = [
       {
-        id: "pending",
-        label: "Order Placed",
-        icon: Clock,
-        date: getStatusTimestamp("pending"),
-        description: "Order has been received",
+         id: "pending",
+         label:
+         paymentStatus === "pending"
+         ? "Awaiting Payment"
+         : "Order Placed",
+         icon: Clock,
+         date: getStatusTimestamp("pending"),
+         description:
+         paymentStatus === "pending"
+         ? "Waiting for payment confirmation"
+         : "Order has been received",
       },
       {
         id: "confirmed",
@@ -599,8 +605,8 @@ const OrderTimeline = ({
                         Complete Your Payment
                       </h4>
                       <p className="text-xs text-zamzam-text-medium mb-3">
-                        Your order is confirmed but payment is pending. Complete
-                        payment to avoid any delays in processing.
+                       Your payment is pending. Complete payment to confirm
+                       and process your order.
                       </p>
                       <Button
                         onClick={handlePayNow}
