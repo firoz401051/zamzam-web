@@ -55,7 +55,7 @@ export async function POST(req: Request) {
       paymentStatus: "pending",
       paymentMethod,
 
-      status: "confirmed",
+      status: "pending",
       orderDate: new Date().toISOString(),
 
       address: address || null,
