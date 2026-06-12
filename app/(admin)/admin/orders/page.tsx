@@ -488,18 +488,12 @@ const toggleSelectAllException = () => {
                   className="flex h-10 w-full md:w-48 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
                 >
                   <option value="all">All Orders</option>
-
-<optgroup label="Active Orders">
   <option value="confirmed">Confirmed</option>
   <option value="processing">Processing</option>
   <option value="shipped">Shipped</option>
   <option value="delivered">Delivered</option>
-</optgroup>
-
-<optgroup label="Exception Orders">
   <option value="pending">Pending</option>
   <option value="cancelled">Cancelled</option>
-</optgroup>
 
                 </select>
               </div>
