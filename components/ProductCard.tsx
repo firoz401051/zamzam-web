@@ -1,3 +1,7 @@
+"use client";
+import { useRouter } from "next/navigation";
+import useCartStore from "@/store";
+import { Button } from "@/components/ui/button";
 import { Product } from "@/sanity.types";
 import PriceFormatter from "./PriceFormatter";
 import Link from "next/link";
@@ -92,6 +96,14 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, layout = "grid" }: ProductCardProps) => {
+
+  const router = useRouter();
+const { addItem } = useCartStore();
+
+const handleBuyNow = () => {
+  addItem(product as unknown as Product);
+  router.push("/cart");
+};
   // Calculate pricing using utility function
   const { displayPrice, originalPrice, hasDiscount } =
     calculateProductPrice(product as unknown as Product);
@@ -304,12 +316,29 @@ const ProductCard = ({ product, layout = "grid" }: ProductCardProps) => {
           </div>
 
           {/* Add to Cart Button */}
-          <div className={layout === "list" ? "w-full sm:w-auto sm:min-w-[140px]" : "w-full"}>
-            <AddToCartButton
-              product={product as unknown as Product}
-              className="w-full rounded-lg font-medium"
-            />
-          </div>
+          <div
+  className={
+    layout === "list"
+      ? "w-full sm:w-auto sm:min-w-[140px]"
+      : "w-full"
+  }
+>
+  <div className="flex flex-col gap-2">
+    <AddToCartButton
+      product={product as unknown as Product}
+      className="w-full rounded-lg font-medium"
+    />
+
+    <Button
+      onClick={handleBuyNow}
+      disabled={isOutOfStock}
+      variant="outline"
+      className="w-full rounded-lg font-medium"
+    >
+      Buy Now
+    </Button>
+  </div>
+</div>
         </div>
       </div>
     </div>
