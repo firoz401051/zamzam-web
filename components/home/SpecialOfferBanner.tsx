@@ -14,11 +14,12 @@ const SpecialOfferBanner = () => {
             {/* Content */}
             <div className="p-8 lg:p-12">
               <h2 className="text-4xl font-bold text-gray-800 mb-4">
-                Best Summer Collection
-              </h2>
-              <p className="text-xl font-semibold text-orange-600 mb-6">
-                Sale Get up to 50% Off
-              </p>
+  Hot Deals of the Week
+</h2>
+
+<p className="text-xl font-semibold text-red-600 mb-6">
+  Special Offers & Exclusive Discounts upto 50%
+</p>
               <p className="text-gray-600 mb-8">
                 Discover the latest trends in summer fashion. From casual wear
                 to elegant dresses, find everything you need to stay stylish
@@ -28,7 +29,9 @@ const SpecialOfferBanner = () => {
                 asChild
                 className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 text-lg"
               >
-                <Link href="/products?category=womens-fashion">Shop Now</Link>
+                <Link href="/deal">
+  View Deals
+</Link>
               </Button>
             </div>
 

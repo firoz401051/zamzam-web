@@ -309,9 +309,11 @@ const SINGLE_COLLECTION_QUERY = defineQuery(
 );
 
 const DEAL_PRODUCTS = defineQuery(
-  `*[_type == "product" && status == "hot"] | order(name asc){
+  `*[_type == "product" && status == "active" && "special-offer" in productSegments]
+  | order(discount desc){
     ...,
-    "categories": categories[]->title
+    "categories": categories[]->title,
+    "brand": brand->name
   }`
 )
 
