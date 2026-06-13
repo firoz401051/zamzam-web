@@ -16,6 +16,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+   metadataBase: new URL("https://www.zamzamfashionstore.in"),
   title: {
     template: "%s | Zam Zam Fashion Store",
     default: "Zam Zam Fashion Store",
@@ -48,6 +49,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+  canonical: "/",
+},
 };
 
 const RootLayout = async ({ children }: { children: React.React.ReactNode }) => {
