@@ -137,7 +137,7 @@ const CartPage = () => {
           taxAmount,
           shippingCost,
           total,
-          paymentMethod: "pending",
+          paymentMethod: "cod",
         }),
       });
 

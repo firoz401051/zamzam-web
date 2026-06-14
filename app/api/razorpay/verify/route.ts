@@ -38,16 +38,39 @@ export async function POST(req: NextRequest) {
     }
 
     // ✅ Update Order in Sanity
-    await serverClient
-      .patch(orderId)
-      .set({
-        status: "confirmed",
-        paymentStatus: "paid",
+    // Get order first
+const order = await serverClient.getDocument(orderId);
 
-        razorpayOrderId: razorpay_order_id,
-        razorpayPaymentId: razorpay_payment_id,
-      })
-      .commit();
+if (!order) {
+  return NextResponse.json(
+    { success: false, error: "Order not found" },
+    { status: 404 }
+  );
+}
+
+const totalPrice = Number(order.totalPrice || 0);
+
+// Detect COD Advance
+const isCODOrder =
+  order.paymentMethod === "cod" && totalPrice >= 500;
+
+await serverClient
+  .patch(orderId)
+  .set({
+    status: "confirmed",
+
+    paymentStatus: isCODOrder ? "cod_pending" : "paid",
+
+    advanceAmount: isCODOrder ? 500 : totalPrice,
+
+    remainingAmount: isCODOrder
+      ? totalPrice - 500
+      : 0,
+
+    razorpayOrderId: razorpay_order_id,
+    razorpayPaymentId: razorpay_payment_id,
+  })
+  .commit();
 
     return NextResponse.json({
       success: true,

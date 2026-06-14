@@ -52,6 +52,9 @@ export async function POST(req: Request) {
       shippingCost: shippingCost || 0,
       totalPrice: total || 0,
 
+      advanceAmount: 0,
+      remainingAmount: total || 0,
+
       paymentStatus: "pending",
       paymentMethod,
 

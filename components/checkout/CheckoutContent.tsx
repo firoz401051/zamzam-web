@@ -133,6 +133,80 @@ console.log("Full Response:", data);
     }
   };
 
+const handleCODAdvancePayment = async () => {
+  setLoading(true);
+
+  try {
+    const sdkLoaded = await loadRazorpay();
+
+    if (!sdkLoaded) {
+      toast.error("Razorpay SDK failed to load.");
+      return;
+    }
+
+    const response = await fetch("/api/razorpay/cod-checkout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        orderId: orderData._id,
+        orderNumber,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Failed to create COD payment");
+    }
+
+    const options = {
+      key: data.key,
+      amount: data.order.amount,
+      currency: "INR",
+      name: "Zam Zam Fashion Store",
+      description: "COD Advance Payment",
+      order_id: data.order.id,
+
+      handler: async function (paymentResponse: any) {
+  const verifyRes = await fetch("/api/razorpay/verify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...paymentResponse,
+      orderId: orderData._id,
+    }),
+  });
+
+  const verifyData = await verifyRes.json();
+
+  if (verifyData.success) {
+    toast.success("Advance Payment Successful ✅");
+
+    router.push(`/success?orderNumber=${orderNumber}`);
+  } else {
+    toast.error("Payment verification failed ❌");
+  }
+},
+
+      theme: {
+        color: "#fa324d",
+      },
+    };
+
+    const razorpay = new (window as any).Razorpay(options);
+    razorpay.open();
+  } catch (error: any) {
+    console.error(error);
+    toast.error(error.message || "COD payment failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
       {/* Order Items */}
@@ -223,26 +297,39 @@ console.log("Full Response:", data);
 
             <Separator />
 
-            {/* Razorpay Payment */}
-            <Button
-              onClick={handleRazorpayPayment}
-              disabled={loading}
-              className="w-full h-12 bg-zamzam-primary"
-            >
-              {loading ? (
-                "Processing..."
-              ) : (
-                <>
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  Pay with Razorpay
-                </>
-              )}
-            </Button>
+            {/* Full Payment */}
+<Button
+  onClick={handleRazorpayPayment}
+  disabled={loading}
+  className="w-full h-12 bg-zamzam-primary"
+>
+  {loading ? (
+    "Processing..."
+  ) : (
+    <>
+      <CreditCard className="w-4 h-4 mr-2" />
+      Pay with Razorpay
+    </>
+  )}
+</Button>
 
-            <div className="text-xs text-gray-500 text-center">
-              <Lock className="inline w-3 h-3 mr-1" />
-              Secure Razorpay Payment Gateway
-            </div>
+{/* COD Option Only For Orders >= ₹500 */}
+{totals.total >= 500 && (
+  <Button
+  onClick={handleCODAdvancePayment}
+  disabled={loading}
+  variant="outline"
+  className="w-full h-12 mt-3"
+>
+    <Banknote className="w-4 h-4 mr-2" />
+    COD (Advance ₹500)
+  </Button>
+)}
+
+<div className="text-xs text-gray-500 text-center">
+  <Lock className="inline w-3 h-3 mr-1" />
+  Secure Razorpay Payment Gateway
+</div>
           </CardContent>
         </Card>
       </div>

@@ -104,6 +104,19 @@ export const orderType = defineType({
       validation: (Rule) => Rule.required().min(0),
     }),
     defineField({
+  name: "advanceAmount",
+  title: "Advance Amount",
+  type: "number",
+  initialValue: 0,
+}),
+
+defineField({
+  name: "remainingAmount",
+  title: "Remaining Amount",
+  type: "number",
+  initialValue: 0,
+}),
+    defineField({
       name: "subtotal",
       title: "Subtotal",
       type: "number",
@@ -143,6 +156,23 @@ export const orderType = defineType({
         defineField({ name: "city", title: "City", type: "string" }),
         defineField({ name: "address", title: "Address", type: "string" }),
         defineField({ name: "name", title: "Name", type: "string" }),
+        defineField({
+  name: "email",
+  title: "Email",
+  type: "string",
+}),
+
+defineField({
+  name: "userId",
+  title: "User ID",
+  type: "string",
+}),
+
+defineField({
+  name: "default",
+  title: "Default Address",
+  type: "boolean",
+}),
       ],
     }),
     defineField({
@@ -165,6 +195,7 @@ export const orderType = defineType({
         list: [
           { title: "Pending", value: "pending" },
           { title: "Paid", value: "paid" },
+          { title: "Partial Paid", value: "partial_paid" },
           { title: "Failed", value: "failed" },
           { title: "Refunded", value: "refunded" },
           { title: "COD - Pending", value: "cod_pending" },
@@ -174,6 +205,17 @@ export const orderType = defineType({
       initialValue: "pending",
       validation: (Rule) => Rule.required(),
     }),
+    defineField({
+  name: "razorpayOrderId",
+  title: "Razorpay Order ID",
+  type: "string",
+}),
+
+defineField({
+  name: "razorpayPaymentId",
+  title: "Razorpay Payment ID",
+  type: "string",
+}),
     defineField({
       name: "status",
       title: "Order Status",
